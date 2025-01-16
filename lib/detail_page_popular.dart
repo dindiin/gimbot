@@ -66,6 +66,7 @@ class DetailPage extends StatelessWidget {
                         Text(
                           gamePopular.title,
                           style: sub2TitleTextStyle,
+                          softWrap: true,
                         ),
                         Text(
                           gamePopular.production,

@@ -66,6 +66,7 @@ class DetailPageAdded extends StatelessWidget {
                         Text(
                           gameAdded.title,
                           style: sub2TitleTextStyle,
+                          softWrap: true,
                         ),
                         Text(
                           gameAdded.production,

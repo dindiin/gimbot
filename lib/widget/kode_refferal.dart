@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:qrscan/qrscan.dart' as scanner;
-
-String? kode;
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class KodeRefferal extends StatefulWidget {
   const KodeRefferal({super.key});
@@ -12,6 +10,22 @@ class KodeRefferal extends StatefulWidget {
 }
 
 class _KodeRefferalState extends State<KodeRefferal> {
+  String _scanResult = "";
+
+  Future<void> scanCode() async {
+    String barcodeScanRes;
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', "Cancel", true, ScanMode.QR);
+    } on PlatformException {
+      barcodeScanRes = "Gagal scan";
+    }
+
+    setState(() {
+      _scanResult = barcodeScanRes;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -24,7 +38,7 @@ class _KodeRefferalState extends State<KodeRefferal> {
               child: TextField(
                 autofocus: false,
                 textCapitalization: TextCapitalization.characters,
-                controller: TextEditingController(text: kode),
+                controller: TextEditingController(text: _scanResult),
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Masukkan kode refferal',
@@ -42,10 +56,9 @@ class _KodeRefferalState extends State<KodeRefferal> {
               child: IconButton(
                 icon: const Icon(Icons.qr_code_scanner),
                 color: Colors.white,
-                onPressed: () async {
-                  await Permission.camera.request();
-                  kode = await scanner.scan();
-                  setState(() {});
+                onPressed: () {
+                  // await Permission.camera.request();
+                  scanCode();
                 },
               ),
             ),
